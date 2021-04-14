@@ -3,11 +3,18 @@ require_relative 'Command'
 class App
     attr_accessor :input, :output, :command
 
-    def initialize
+    def initialize(commands)
         self.command = Command.new
-        while self.input != 'exit'
-            self.askInput
-            self.showOutput
+        if commands.length() > 0
+            commands.each do |command|
+                self.command.setInput(command)
+                puts self.command.process
+            end
+        else
+            while self.input != 'exit'
+                self.askInput
+                self.showOutput
+            end
         end
     end
 
@@ -16,7 +23,7 @@ class App
         print "\nInput: "
         self.input = gets.chomp
         self.command.setInput(self.input)
-        self.output = command.process
+        self.output = self.command.process
     end
     def showOutput
         if self.input != 'exit'

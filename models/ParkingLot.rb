@@ -2,11 +2,6 @@ class ParkingLot
     
     attr_accessor :slots
 
-    # def initialize(slot = 6)
-    #     self.slots = Array.new(slot.to_i)
-    # end
-
-
     def setSlots(slots)
         self.slots = Array.new(slots.to_i)
     end
@@ -16,9 +11,6 @@ class ParkingLot
     end
 
     def getSlotByPlate(plate)
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
         slot = 'Not found'
         self.slots.each_with_index {|vehicle, idx|
             if !vehicle.nil?
@@ -31,9 +23,6 @@ class ParkingLot
     end
 
     def getSlotsByColor(color)
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
         plates = ""
         self.slots.each_with_index {|vehicle, idx|
             if !vehicle.nil?
@@ -46,9 +35,6 @@ class ParkingLot
     end
 
     def getPlatesByColor(color)
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
         plates = ""
         self.slots.each_with_index {|vehicle, idx|
             if !vehicle.nil?
@@ -61,34 +47,31 @@ class ParkingLot
     end
 
     def getStatus
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
-        status = "\n"
+        status = "\nSlot No. | Plate Number | Colour\n"
         self.slots.each_with_index {|vehicle, idx|
             if !vehicle.nil?
                 status += "#{idx+1} | #{vehicle.getPlate} | #{vehicle.getColor}\n"
+            # else
+            #     status += "#{idx+1} | unoccupied | unoccupied\n"
             end
         }
-        return status
+        return status += "\n"
     end
 
     def leaveSlot(slot_no)
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
         idx = slot_no.to_i - 1
-        if self.slots[idx].nil?
+        if slot_no.to_i > self.slots.length() or slot_no.to_i < 0
             return "Parking slot does not exist"
+        else
+            if self.slots[idx].nil?
+                return "Parking slot is unoccupied"
+            end
+            self.slots[idx] = nil
+            return "Slot number #{slot_no} is free"
         end
-        self.slots[idx] = nil
-        return "Slot number #{slot_no} is free"
     end
 
     def setToSlot(vehicle)
-        if !self.checkParkingSlot
-            return "Please set parking lot slots" 
-        end
         has_slot = false
         allocated_slot = nil
         self.slots.each_with_index {|val, idx|
@@ -106,9 +89,4 @@ class ParkingLot
         end
     end
 
-    def checkParkingSlot
-        if self.slots.nil?
-            return false
-        end
-    end
 end
